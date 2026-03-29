@@ -1,0 +1,25 @@
+{
+  "name": "net.vrclarity.sdk",
+  "version": "0.1.0",
+  "displayName": "VRClarity SDK",
+  "description": "VRChatワールド用の匿名メトリクス収集SDK。詳細は https://vrclarity.net/ をご覧ください。",
+  "unity": "2022.3",
+  "author": {
+    "name": "Studio Peipeiko",
+    "url": "https://github.com/Studio-peipeiko"
+  },
+  "vpmDependencies": {
+    "com.vrchat.base": "3.5.x",
+    "com.vrchat.worlds": "3.5.x",
+    "com.vrchat.udonsharp": "1.1.x"
+  },
+  "keywords": [
+    "VRChat",
+    "Udon",
+    "UdonSharp",
+    "Analytics",
+    "Metrics",
+    "VRClarity"
+  ],
+  "license": "MIT"
+}

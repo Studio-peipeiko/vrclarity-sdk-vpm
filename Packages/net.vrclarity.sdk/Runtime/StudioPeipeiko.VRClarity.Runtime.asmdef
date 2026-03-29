@@ -1,0 +1,20 @@
+{
+    "name": "StudioPeipeiko.VRClarity.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "UdonSharp.Runtime",
+        "VRC.Udon",
+        "VRC.Udon.Serialization.OdinSerializer",
+        "VRC.SDK3",
+        "VRC.SDKBase"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

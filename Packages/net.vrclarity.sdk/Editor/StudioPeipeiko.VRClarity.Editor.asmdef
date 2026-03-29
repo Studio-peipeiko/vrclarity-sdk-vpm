@@ -1,0 +1,25 @@
+{
+    "name": "StudioPeipeiko.VRClarity.Editor",
+    "rootNamespace": "",
+    "references": [
+        "StudioPeipeiko.VRClarity.Runtime",
+        "UdonSharp.Runtime",
+        "UdonSharp.Editor",
+        "VRC.Udon",
+        "VRC.Udon.Editor",
+        "VRC.SDK3",
+        "VRC.SDKBase",
+        "VRC.SDKBase.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

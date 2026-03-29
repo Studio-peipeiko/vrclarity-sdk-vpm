@@ -1,76 +1,98 @@
-# VPM Package Template
+# VRClarity SDK VPM Repository
 
-Starter for making Packages, including automation for building and publishing them.
+VRChatワールド用の匿名メトリクス収集SDKを配布するVPMレジストリリポジトリです。
 
-Once you're all set up, you'll be able to push changes to this repository and have .zip and .unitypackage versions automatically generated, and a listing made which works in the VPM for delivering updates for this package. If you want to make a listing with a variety of packages, check out our [template-package-listing](https://github.com/vrchat-community/template-package-listing) repo.
+<!-- TODO: サービス開始後に有効化する -->
+<!-- 詳細は [VRClarity](https://vrclarity.net/) をご覧ください。 -->
 
-## ▶ Getting Started
+## 📦 パッケージ
 
-* Press [![Use This Template](https://user-images.githubusercontent.com/737888/185467681-e5fdb099-d99f-454b-8d9e-0760e5a6e588.png)](https://github.com/vrchat-community/template-package/generate)
-to start a new GitHub project based on this template.
-  * Choose a fitting repository name and description.
-  * Set the visibility to 'Public'. You can also choose 'Private' and change it later.
-  * You don't need to select 'Include all branches.'
-* Clone this repository locally using Git.
-  * If you're unfamiliar with Git and GitHub, [visit GitHub's documentation](https://docs.github.com/en/get-started/quickstart/git-and-github-learning-resources) to learn more.
-* Add the folder to Unity Hub and open it as a Unity Project.
-* After opening the project, wait while the VPM resolver is downloaded and added to your project.
-  * This gives you access to the VPM Package Maker and Package Resolver tools.
+### VRClarity SDK
 
-## 🚇 Migrating Assets Package
-Full details at [Converting Assets to a VPM Package](https://vcc.docs.vrchat.com/guides/convert-unitypackage)
+VRChatワールド用の匿名メトリクス収集SDK。滞在時間・移動距離・訪問回数・プラットフォーム（PCVR / Desktop / Quest / Android / iOS）・プレイヤー数を自動収集します。
 
-## ✏️ Working on Your Package
+- **パッケージ名**: `net.vrclarity.sdk`
+- **バージョン**: 0.1.0
+<!-- - **公式サイト**: https://vrclarity.net/ -->
+- **ドキュメント**: [README (日本語)](./Packages/net.vrclarity.sdk/Documentation~/README_ja.md) | [README (English)](./Packages/net.vrclarity.sdk/Documentation~/README_en.md)
 
-* Delete the "Packages/com.vrchat.demo-template" directory or reuse it for your own package.
-  * If you reuse the package, don't forget to rename it and add generated meta files to your repository!
-* Update the `.gitignore` file in the "Packages" directory to include your package.
-  * For example, change `!com.vrchat.demo-template` to `!com.username.package-name`.
-  * `.gitignore` files normally *exclude* the contents of your "Packages" directory. This `.gitignore` in this template show how to *include* the demo package. You can easily change this out for your own package name.
-* Open the Unity project and work on your package's files in your favorite code editor.
-* When you're ready, commit and push your changes.
-* Once you've set up the automation as described below, you can easily publish new versions.
+## 🚀 ユーザー向け: パッケージの使い方
 
-## 🤖 Setting up the Automation
+### VCC へのレジストリ追加
 
-Create a repository variable with the name and value described below.
-For details on how to create repository variables, see [Creating Configuration Variables for a Repository](https://docs.github.com/en/actions/learn-github-actions/variables#creating-configuration-variables-for-a-repository).
-Make sure you are creating a **repository variable**, and not a **repository secret**.
+1. VRChat Creator Companion (VCC) を開く
+2. `Settings` → `Packages` → `Add Repository` を選択
+3. 以下の URL を入力：
+   ```
+   https://studiopeipeiko.github.io/vrclarity-sdk-vpm/index.json
+   ```
+4. `Add` をクリック
 
-* `PACKAGE_NAME`: the name of your package, like `com.vrchat.demo-template`.
+### パッケージのインストール
 
-Finally, go to the "Settings" page for your repo, then choose "Pages", and look for the heading "Build and deployment". Change the "Source" dropdown from "Deploy from a branch" to "GitHub Actions".
+1. VCC でプロジェクトを開く
+2. `Manage Project` をクリック
+3. パッケージリストから `VRClarity SDK` を探す
+4. `+` ボタンをクリックしてインストール
 
-That's it!
-Some other notes:
-* We highly recommend you keep the existing folder structure of this template.
-  * The root of the project should be a Unity project.
-  * Your packages should be in the "Packages" directory.
-  * If you deviate from this folder structure, you'll need to update the paths that assume your package is in the "Packages" directory on lines 24, 38, 41 and 57.
-* If you want to store and generate your web files in a folder other than "Website" in the root, you can change the `listPublicDirectory` item [here in build-listing.yml](.github/workflows/build-listing.yml#L17).
+詳しい使い方は [パッケージの README (日本語)](./Packages/net.vrclarity.sdk/Documentation~/README_ja.md) を参照してください。
 
-## 🎉 Publishing a Release
+## ⚖️ データ利用規約
 
-You can make a release by running the [Build Release](.github/workflows/release.yml) action. The version specified in your `package.json` file will be used to define the version of the release.
+VRClarity SDK を使用することで、以下の条件に同意したものとみなされます：
 
-## 📃 Rebuilding the Listing
+### データの所有権
+- **収集されたメトリクスデータの所有権は VRClarity に帰属します**
+- ワールド制作者は、データ収集に同意することでSDKを利用できますが、収集データ自体の所有権は保持しません
+- VRClarity は収集したデータを匿名化・集計し、サービス改善や統計情報の提供に使用する権利を有します
 
-Whenever you make a change to a release - manually publishing it, or manually creating, editing or deleting a release, the [Build Repo Listing](.github/workflows/build-listing.yml) action will make a new index of all the releases available, and publish them as a website hosted fore free on [GitHub Pages](https://pages.github.com/). This listing can be used by the VPM to keep your package up to date, and the generated index page can serve as a simple landing page with info for your package. The URL for your package will be in the format `https://username.github.io/repo-name`.
+### 禁止事項
+以下の行為は**厳重に禁止**されています：
 
-## 🏠 Customizing the Landing Page (Optional)
+1. **エンドポイントの変更・改変**
+   - SDK が送信するデータのエンドポイント URL を変更すること
+   - VRClarity のサーバー以外にデータを送信するように改変すること
 
-The action which rebuilds the listing also publishes a landing page. The source for this page is in `Website/index.html`. The automation system uses [Scriban](https://github.com/scriban/scriban) to fill in the objects like `{{ this }}` with information from the latest release's manifest, so it will stay up-to-date with the name, id and description that you provide there. You are welcome to modify this page however you want - just use the existing `{{ template.objects }}` to fill in that info wherever you like. The entire contents of your "Website" folder are published to your GitHub Page each time.
+2. **データの横流し・不正利用**
+   - 収集されたデータを第三者に提供・販売すること
+   - SDK を改変して独自のデータ収集システムとして利用すること
+   - VRClarity のインフラを不正に利用すること
 
-## 💻 Technical Stuff
+3. **SDK の悪用**
+   - SDK を逆コンパイル・リバースエンジニアリングして独自のシステムに転用すること
+   - 暗号化キーやエンドポイント情報を抽出・公開すること
 
-You are welcome to make your own changes to the automation process to make it fit your needs, and you can create Pull Requests if you have some changes you think we should adopt. Here's some more info on the included automation:
+違反が確認された場合、SDK の利用停止やワールドデータの削除、法的措置を取る場合があります。
 
-### Build Release Action
-[release.yml](/.github/workflows/release.yml)
+詳細は [利用規約 (ToS)](./ToS.md) を参照してください。
 
-This is a composite action combining a variety of existing GitHub Actions and some shell commands to create both a .zip of your Package and a .unitypackage. It creates a release which is named for the `version` in the `package.json` file found in your target Package, and publishes the zip, the unitypackage and the package.json file to this release.
+## 📝 ライセンス
 
-### Build Repo Listing
-[build-listing.yml](.github/workflows/build-listing.yml)
+MIT License - 詳細は [LICENSE](./LICENSE) ファイルを参照してください。
 
-This is a composite action which builds a vpm-compatible [Repo Listing](https://vcc.docs.vrchat.com/vpm/repos) based on the releases you've created. In order to find all your releases and combine them into a listing, it checks out [another repository](https://github.com/vrchat-community/package-list-action) which has a [Nuke](https://nuke.build/) project which includes the VPM core lib to have access to its types and methods. This project will be expanded to include more functionality in the future - for now, the action just calls its `BuildRepoListing` target.
+## 🆘 サポート
+
+- **X (Twitter)**: [@peipeiko666](https://x.com/peipeiko666)
+
+## 📚 関連リンク
+
+<!-- - [VRClarity](https://vrclarity.net/) -->
+- [VRChat Creator Companion](https://vcc.docs.vrchat.com/)
+- [VPM Package Specification](https://vcc.docs.vrchat.com/vpm/packages/)
+- [UdonSharp Documentation](https://udonsharp.docs.vrchat.com/)
+
+## 📌 バージョン履歴
+
+- **v0.1.0**: 初回リリース
+  - 滞在時間マイルストーン（7段階: 1分〜240分）
+  - 移動距離マイルストーン（6段階: 10m〜2500m）
+  - 訪問回数のバケット方式追跡（20バケット、最大200回）
+  - プラットフォーム検出（PCVR / Desktop / Quest / Android / iOS）
+  - プレイヤー数追跡（0〜80人、5分ごと）
+  - AES-256-GCM暗号化によるURL事前ベイク
+
+詳細はリリースノートを参照してください。
+
+---
+
+Made with ❤️ by Studio peipeiko
