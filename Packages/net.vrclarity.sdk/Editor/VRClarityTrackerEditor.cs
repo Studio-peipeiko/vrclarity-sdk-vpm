@@ -96,7 +96,7 @@ namespace StudioPeipeiko.VRClarity.Editor
             if (_showUrlStatus)
             {
                 EditorGUI.indentLevel++;
-                DrawUrlPoolStatus("Stay URLs", _stayUrls, 7);
+                DrawUrlPoolStatus("Stay URLs", _stayUrls, 9);
                 DrawUrlPoolStatus("Move URLs", _moveUrls, 6);
                 DrawUrlPoolStatus("Visit URLs", _visitUrls, 20);
                 DrawUrlPoolStatus("Platform URLs", _platformUrls, 5);
