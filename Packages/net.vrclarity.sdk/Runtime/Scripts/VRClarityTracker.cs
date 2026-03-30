@@ -251,10 +251,7 @@ namespace StudioPeipeiko.VRClarity.Runtime
 
         // ===== Callbacks =====
 
-        public override void OnStringLoadSuccess(IVRCStringDownload result)
-        {
-            Debug.Log("[VRClarity] Heartbeat sent successfully.");
-        }
+        public override void OnStringLoadSuccess(IVRCStringDownload result) {}
 
         public override void OnStringLoadError(IVRCStringDownload result)
         {
