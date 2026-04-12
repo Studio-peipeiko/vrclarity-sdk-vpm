@@ -26,7 +26,6 @@ namespace StudioPeipeiko.VRClarity.Editor
         }
         private SerializedProperty _keyId;
         private SerializedProperty _encryptionKey;
-        private SerializedProperty _worldId;
         private SerializedProperty _stayUrls;
         private SerializedProperty _moveUrls;
         private SerializedProperty _visitUrls;
@@ -40,7 +39,6 @@ namespace StudioPeipeiko.VRClarity.Editor
         {
             _keyId = serializedObject.FindProperty("keyId");
             _encryptionKey = serializedObject.FindProperty("encryptionKey");
-            _worldId = serializedObject.FindProperty("worldId");
             _stayUrls = serializedObject.FindProperty("_stayUrls");
             _moveUrls = serializedObject.FindProperty("_moveUrls");
             _visitUrls = serializedObject.FindProperty("_visitUrls");
@@ -58,8 +56,8 @@ namespace StudioPeipeiko.VRClarity.Editor
             EditorGUILayout.Space(4);
             EditorGUILayout.LabelField("VRClarity Tracker", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "VRClarityダッシュボードで発行したAPI KeyとEncryption Keyを入力し、" +
-                "「Bake URLs」ボタンを押してください。ビルド時にも自動でベイクされます。",
+                "VRClarityダッシュボードで発行したAPI KeyとEncryption Keyを入力してください。\n" +
+                "URLはビルド時に自動生成されます。World IDはVRC_SceneDescriptorのBlueprint IDから自動取得されます。",
                 MessageType.Info);
             EditorGUILayout.Space(4);
 
@@ -67,27 +65,11 @@ namespace StudioPeipeiko.VRClarity.Editor
             EditorGUILayout.LabelField("API Settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_keyId, new GUIContent("Key ID", "sk_ + 24 hex characters"));
             EditorGUILayout.PropertyField(_encryptionKey, new GUIContent("Encryption Key", "64 hex characters (256-bit AES key)"));
-            EditorGUILayout.PropertyField(_worldId, new GUIContent("World ID", "wrld_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"));
 
             EditorGUILayout.Space(8);
 
             // Validation
             DrawValidationStatus(tracker);
-
-            EditorGUILayout.Space(4);
-
-            // Bake Button
-            EditorGUI.BeginDisabledGroup(!IsConfigValid(tracker));
-            if (GUILayout.Button("Bake URLs", GUILayout.Height(30)))
-            {
-                Undo.RecordObject(tracker, "Bake VRClarity URLs");
-                bool success = VRClarityUrlBaker.BakeUrls(tracker);
-                if (success)
-                {
-                    EditorUtility.SetDirty(tracker);
-                }
-            }
-            EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space(4);
 
@@ -104,7 +86,7 @@ namespace StudioPeipeiko.VRClarity.Editor
 
                 int total = SafeArraySize(_stayUrls) + SafeArraySize(_moveUrls) +
                             SafeArraySize(_visitUrls) + SafeArraySize(_platformUrls) + SafeArraySize(_pcUrls);
-                EditorGUILayout.LabelField($"Total: {total} / 119 URLs baked");
+                EditorGUILayout.LabelField($"Total: {total} / 121 URLs baked");
                 EditorGUI.indentLevel--;
             }
 
@@ -115,11 +97,9 @@ namespace StudioPeipeiko.VRClarity.Editor
         {
             bool keyIdValid = VRClarityEncryption.IsValidKeyId(tracker.keyId);
             bool encKeyValid = VRClarityEncryption.IsValidEncryptionKey(tracker.encryptionKey);
-            bool worldIdValid = !string.IsNullOrEmpty(tracker.worldId) && tracker.worldId.StartsWith("wrld_");
 
             DrawStatusLine("Key ID", keyIdValid, string.IsNullOrEmpty(tracker.keyId) ? "Not set" : "Invalid format (expected sk_ + 24 hex)");
             DrawStatusLine("Encryption Key", encKeyValid, string.IsNullOrEmpty(tracker.encryptionKey) ? "Not set" : "Invalid format (expected 64 hex characters)");
-            DrawStatusLine("World ID", worldIdValid, string.IsNullOrEmpty(tracker.worldId) ? "Not set" : "Invalid format (expected wrld_...)");
         }
 
         private void DrawStatusLine(string label, bool isValid, string errorMessage)
@@ -152,12 +132,5 @@ namespace StudioPeipeiko.VRClarity.Editor
             return prop != null && prop.isArray ? prop.arraySize : 0;
         }
 
-        private bool IsConfigValid(VRClarityTracker tracker)
-        {
-            return VRClarityEncryption.IsValidKeyId(tracker.keyId)
-                && VRClarityEncryption.IsValidEncryptionKey(tracker.encryptionKey)
-                && !string.IsNullOrEmpty(tracker.worldId)
-                && tracker.worldId.StartsWith("wrld_");
-        }
     }
 }

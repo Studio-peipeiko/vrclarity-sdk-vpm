@@ -1,6 +1,6 @@
 # VRClarity SDK Setup Guide
 
-An anonymous metrics collection SDK for VRChat worlds. Simply place a Prefab from the right-click menu to automatically collect the following data:
+An SDK for VRChat worlds that measures player behavior and sends data to VRClarity. Simply place a Prefab from the right-click menu to automatically measure and send the following data:
 
 | Metric | Description |
 |---|---|
@@ -10,7 +10,7 @@ An anonymous metrics collection SDK for VRChat worlds. Simply place a Prefab fro
 | Platform | 5 types: PCVR / Desktop / Quest / Android Mobile / iOS |
 | Player Count | Concurrent player count in instance (0-80 players, every 5 minutes) |
 
-All collected data is anonymous. No personal information such as displayName or userId is ever sent.
+All transmitted data is anonymous. No personal information such as displayName or userId is ever sent.
 
 ---
 
@@ -25,7 +25,7 @@ All collected data is anonymous. No personal information such as displayName or 
 ## 1. Obtain an API Key
 
 1. Log in to the [VRClarity Dashboard](https://vrclarity.net) with your Discord account
-2. Navigate to the **SDK Keys** page from the left menu
+2. Navigate to the **SDK API Key Management** page from the left menu
 3. Click "Create New Key"
 4. Select the target World ID
 5. Copy the displayed **Key ID** and **Encryption Key** and save them securely
@@ -42,14 +42,14 @@ All collected data is anonymous. No personal information such as displayName or 
 2. Go to **Settings** > **Packages** > **Add Repository**
 3. Enter the following URL:
    ```
-   https://studiopeipeiko.github.io/vrclarity-sdk-vpm/vpm.json
+   https://Studio-peipeiko.github.io/vrclarity-sdk-vpm/index.json
    ```
 4. Click **Add**
 5. Add **VRClarity SDK** from your project's **Manage Project** page
 
 ### Manual Installation
 
-1. Copy the `packages/net.vrclarity.sdk` folder into your Unity project's `Packages/` directory
+1. Copy the `Packages/net.vrclarity.sdk` folder into your Unity project's `Packages/` directory
 2. Or use Package Manager's **Add package from disk** and select `package.json`
 
 ---
@@ -68,20 +68,18 @@ Enter the following in the VRClarityTracker component Inspector:
 |---|---|---|
 | **Key ID** | Key ID from the dashboard | `sk_` + 24 hex characters |
 | **Encryption Key** | Encryption key from the dashboard | 64 hex characters |
-| **World ID** | Target world ID | `wrld_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
+
+> **World ID:** Automatically retrieved from the VRC_SceneDescriptor Blueprint ID at bake time. No manual input required.
 
 Validation results will appear next to each field:
 - **OK** — Format is correct
 - **Red text** — Format issue detected
 
-### 3-3. Bake URLs
+### 3-3. Build
 
-Once all fields are correctly filled, the **Bake URLs** button becomes active.
+Once Key ID and Encryption Key are entered, simply build your world. URLs are automatically generated at build time.
 
-- **Manual bake:** Click the "Bake URLs" button in the Inspector
-- **Automatic bake:** URLs are automatically baked when building the world
-
-After baking, expand "URL Pool Status" to verify the generated URL counts:
+After building, expand "URL Pool Status" in the Inspector to verify the generated URL counts:
 
 ```
 Stay URLs:      9 / 9
@@ -92,25 +90,21 @@ PC URLs:       81 / 81
 Total:        121 / 121 URLs baked
 ```
 
-### 3-4. Build & Upload
+### 3-4. Upload
 
-Build and upload your world as usual. URLs are automatically baked at build time, and metrics collection begins as soon as players visit your world.
+Upload your world as usual. Data transmission to VRClarity begins as soon as players visit.
 
 ---
 
 ## 4. View Data on the Dashboard
 
-Once players visit your world, data will appear on the VRClarity dashboard:
+Once players visit your world, data will appear on the VRClarity dashboard.
 
-- **Stay Duration Distribution:** "150 players stayed 1+ min, 80 stayed 5+ min, 20 stayed 60+ min, 5 stayed 240+ min, 2 stayed 360+ min, 1 stayed 480+ min"
-- **Movement Distance Distribution:** "200 players moved 10m+, 50 moved 50m+, 10 moved 1000m+"
-- **Visit Count Distribution:** "200 first-time, 80 second-time, 50 at 10 visits, 10 at 50 visits..." (bucket-based, tracking up to 200 visits)
-- **Platform Distribution:** "PCVR 40%, Desktop 25%, Quest 30%, Android 3%, iOS 2%"
-- **Player Count Timeline:** "20 on join, 35 after 5min, 50 peak at 10min, 25 after 30min" (updated every 5 minutes)
+For details on how to read the dashboard, see the [VRClarity Documentation](https://vrclarity.net/).
 
 ---
 
-## Collected Metrics Details
+## Transmitted Metrics Details
 
 ### Stay Duration (9 stages)
 
@@ -174,7 +168,6 @@ Periodically reports the concurrent player count in the instance.
 - Instances with 81+ players are recorded as "80"
 
 **Features:**
-- Tracks private instance data unavailable via VRChat API
 - Useful for monitoring real-time concurrent players and peak hours
 - Visualizes player count trends during events
 
@@ -184,15 +177,15 @@ Periodically reports the concurrent player count in the instance.
 
 ### URLs are empty after build
 
-- Verify that Key ID / Encryption Key / World ID are all correctly entered in the Inspector
-- Click "Bake URLs" manually and check for error messages
-- Check the Console for errors starting with `[VRClarity]`
+- Verify that Key ID / Encryption Key are correctly entered in the Inspector
+- Ensure the VRC_SceneDescriptor Blueprint ID is set
+- Check the Console for `[VRClarity]` errors to identify the bake failure cause
 
 ### Data not appearing on the dashboard
 
 - Verify the world was uploaded correctly
-- Check that the API Key is active (not revoked) on the SDK Keys page
-- Ensure the World ID tied to the API Key matches the one entered in the Inspector
+- Check that the API Key is active (not revoked) on the SDK API Key Management page
+- Ensure the API Key is linked to the correct world on the dashboard
 
 ### Console shows `Heartbeat send failed`
 
@@ -206,14 +199,11 @@ Periodically reports the concurrent player count in the instance.
 
 - **Communication:** HTTPS GET (via VRCStringDownloader)
 - **Encryption:** Industry-standard encryption
-- **Send Interval:**
-  - Event sending (Stay/Move/Visit/Platform): Queue-managed, periodic transmission
-  - Player count sending: Every 5 minutes
+- **Transmission:** All sends (Stay/Move/Visit/Platform/Player Count) are queue-managed and transmitted sequentially at 5-second intervals
 - **Total URLs:** 121 (Stay 9 + Move 6 + Visit 20 + Platform 5 + PC 81)
 - **Privacy:** displayName / userId are never sent. Only event type and numeric values are transmitted
 - **Persistence:** PlayerData Persistence for visit counting
 - **Synchronization:** Not required. Each player operates independently on their local client
-- **Player Count Limit:** 0-80 players (81+ recorded as 80)
 
 ---
 
@@ -222,13 +212,13 @@ Periodically reports the concurrent player count in the instance.
 By using the VRClarity SDK, you agree to the following:
 
 ### Data Ownership
-- **All collected metrics data is owned by VRClarity**
-- World creators can view statistics about their worlds on the dashboard, but ownership of the collected data belongs to VRClarity
+- **All metrics data transmitted to VRClarity is owned by VRClarity**
+- World creators can view statistics about their worlds on the dashboard, but ownership of the transmitted data belongs to VRClarity
 
 ### Prohibited Activities
 The following activities are strictly prohibited:
 - **Endpoint modification**: Changing the SDK's transmission destination to anything other than VRClarity
-- **Data misappropriation**: Providing or selling collected data to third parties
+- **Data misappropriation**: Providing or selling transmitted data to third parties
 - **SDK abuse**: Reverse engineering, extracting/publishing encryption keys, etc.
 
 Violations may result in SDK suspension, data deletion, and/or legal action.

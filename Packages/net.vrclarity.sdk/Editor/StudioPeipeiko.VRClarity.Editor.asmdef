@@ -5,6 +5,7 @@
         "StudioPeipeiko.VRClarity.Runtime",
         "UdonSharp.Runtime",
         "UdonSharp.Editor",
+        "VRC.Core",
         "VRC.Udon",
         "VRC.Udon.Editor",
         "VRC.SDK3",

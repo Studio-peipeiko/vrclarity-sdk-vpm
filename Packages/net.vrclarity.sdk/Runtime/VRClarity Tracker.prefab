@@ -55,12 +55,12 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8844605545797677639}
-  keyId: 
-  encryptionKey: 
-  worldId: 
+  keyId:
+  encryptionKey:
   _stayUrls: []
   _moveUrls: []
   _visitUrls: []
+  _platformUrls: []
   _pcUrls: []
 --- !u!114 &8844605545797677639
 MonoBehaviour:

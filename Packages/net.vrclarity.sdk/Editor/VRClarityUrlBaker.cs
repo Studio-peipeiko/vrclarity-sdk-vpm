@@ -3,10 +3,37 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using VRC.Core;
 using VRC.SDKBase;
 
 namespace StudioPeipeiko.VRClarity.Editor
 {
+    [InitializeOnLoad]
+    internal static class VRClarityPlayModeBaker
+    {
+        static VRClarityPlayModeBaker()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state != PlayModeStateChange.ExitingEditMode) return;
+
+            var trackers = Object.FindObjectsOfType<VRClarityTracker>();
+            if (trackers == null || trackers.Length == 0) return;
+
+            foreach (var tracker in trackers)
+            {
+                bool success = VRClarityUrlBaker.BakeUrls(tracker, warnOnly: true);
+                if (!success)
+                {
+                    VRClarityUrlBaker.ClearUrlPools(tracker);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Pre-build processor that bakes encrypted VRCUrl pools into VRClarityTracker components.
     /// Runs automatically before every build via IPreprocessBuildWithReport.
@@ -36,27 +63,25 @@ namespace StudioPeipeiko.VRClarity.Editor
 
         /// <summary>
         /// Bake all URL pools for a single VRClarityTracker instance.
-        /// Can be called from the custom Inspector for manual baking.
+        /// When warnOnly is true, configuration errors are reported as warnings instead of errors (used for Play mode).
         /// </summary>
-        public static bool BakeUrls(VRClarityTracker tracker)
+        public static bool BakeUrls(VRClarityTracker tracker, bool warnOnly = false)
         {
             if (tracker == null) return false;
 
             if (!VRClarityEncryption.IsValidKeyId(tracker.keyId))
             {
-                Debug.LogError($"[VRClarity] Invalid Key ID: '{tracker.keyId}'. Expected format: sk_ + 24 hex characters.");
+                var msg = $"[VRClarity] Invalid Key ID: '{tracker.keyId}'. Expected format: sk_ + 24 hex characters.";
+                if (warnOnly) { Debug.LogWarning(msg); return false; }
+                Debug.LogError(msg);
                 return false;
             }
 
             if (!VRClarityEncryption.IsValidEncryptionKey(tracker.encryptionKey))
             {
-                Debug.LogError($"[VRClarity] Invalid Encryption Key. Expected 64 hex characters (256-bit).");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(tracker.worldId) || !tracker.worldId.StartsWith("wrld_"))
-            {
-                Debug.LogError($"[VRClarity] Invalid World ID: '{tracker.worldId}'. Expected format: wrld_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+                var msg = "[VRClarity] Invalid Encryption Key. Expected 64 hex characters (256-bit).";
+                if (warnOnly) { Debug.LogWarning(msg); return false; }
+                Debug.LogError(msg);
                 return false;
             }
 
@@ -67,12 +92,23 @@ namespace StudioPeipeiko.VRClarity.Editor
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[VRClarity] Failed to parse encryption key: {e.Message}");
+                var msg = $"[VRClarity] Failed to parse encryption key: {e.Message}";
+                if (warnOnly) { Debug.LogWarning(msg); return false; }
+                Debug.LogError(msg);
                 return false;
             }
 
             string keyId = tracker.keyId;
-            string worldId = tracker.worldId;
+
+            var pipeline = Object.FindObjectOfType<PipelineManager>();
+            string worldId = pipeline?.blueprintId ?? "";
+            if (string.IsNullOrEmpty(worldId) || !worldId.StartsWith("wrld_"))
+            {
+                var msg = "[VRClarity] Could not retrieve World ID. Please set the Blueprint ID in VRC_SceneDescriptor.";
+                if (warnOnly) { Debug.LogWarning(msg); return false; }
+                Debug.LogError(msg);
+                return false;
+            }
 
             var so = new SerializedObject(tracker);
 
@@ -97,6 +133,17 @@ namespace StudioPeipeiko.VRClarity.Editor
             Debug.Log($"[VRClarity] Baked {totalUrls} URLs for world {worldId}.");
 
             return true;
+        }
+
+        public static void ClearUrlPools(VRClarityTracker tracker)
+        {
+            var so = new SerializedObject(tracker);
+            foreach (var prop in new[] { "_stayUrls", "_moveUrls", "_visitUrls", "_platformUrls", "_pcUrls" })
+            {
+                so.FindProperty(prop).arraySize = 0;
+            }
+            so.ApplyModifiedProperties();
+            Debug.LogWarning("[VRClarity] URL pools cleared. No URL requests will be sent.");
         }
 
         private static void BakeUrlArray(

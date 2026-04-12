@@ -1,13 +1,13 @@
 # VRClarity SDK Terms of Service
 
-**Last Updated**: March 27, 2026
-**Version**: 1.0.0
+**Last Updated**: April 13, 2026
+**Version**: 1.1.0
 
 These Terms of Service (the "Terms") govern your use of the VRClarity SDK (the "SDK") provided by Studio peipeiko ("we", "us", or "our"). By using the SDK, you agree to be bound by these Terms.
 
 ## 1. Service Overview
 
-The VRClarity SDK is an anonymous metrics collection and analytics service for VRChat worlds. World creators can use the SDK to automatically collect and analyze the following data:
+The VRClarity SDK is a player behavior measurement and analytics service for VRChat worlds. World creators can use the SDK to automatically measure, transmit, and analyze the following data:
 
 - Stay duration and travel distance milestones
 - Visit count tracking with bucket system
@@ -16,12 +16,12 @@ The VRClarity SDK is an anonymous metrics collection and analytics service for V
 
 ## 2. Data Ownership
 
-### 2.1 Ownership of Collected Data
-**All collected metrics data is owned by VRClarity (us).** World creators consent to data collection by using the SDK but do not retain ownership of the collected data itself.
+### 2.1 Ownership of Transmitted Data
+**All metrics data transmitted to VRClarity is owned by VRClarity (us).** World creators consent to data transmission by using the SDK but do not retain ownership of the transmitted data itself.
 
 ### 2.2 Data Usage Rights
 - **World Creators**: Can view statistics about their worlds through the VRClarity dashboard
-- **VRClarity**: May use collected data for the following purposes:
+- **VRClarity**: May use transmitted data for the following purposes:
   - Providing and improving the service
   - Publishing anonymized and aggregated statistics
   - Research and analysis
@@ -40,16 +40,14 @@ The following activities are **strictly prohibited** when using the SDK. Violati
 - Using network settings or proxies to redirect data transmission
 
 ### 3.2 Data Misappropriation and Unauthorized Use
-- Providing, selling, or transferring collected data to third parties
-- Modifying the SDK to use it as a custom data collection system
+- Providing, selling, or transferring transmitted data to third parties
+- Modifying the SDK to use it as a custom data transmission system
 - Unauthorized use of VRClarity's infrastructure
 - Mass data extraction through scraping or crawling
 
-### 3.3 SDK Abuse and Reverse Engineering
-- Decompiling, disassembling, or reverse engineering the SDK
-- Extracting and publishing encryption keys, endpoint information, or API keys
-- Extracting the SDK's source code for use in custom systems
-- Disabling or circumventing security features
+### 3.3 SDK Abuse
+- Publishing or transferring obtained encryption keys or API keys to third parties
+- Disabling or circumventing security features to misuse VRClarity's service
 
 ### 3.4 Unauthorized Access and Service Disruption
 - Attempting unauthorized access to VRClarity servers
@@ -84,7 +82,7 @@ We will make reasonable efforts to provide advance notice for significant change
 
 ## 6. Disclaimer
 
-- **Data Accuracy**: We do not guarantee the accuracy of collected data
+- **Data Accuracy**: We do not guarantee the accuracy of transmitted data
 - **Service Availability**: We do not guarantee continuous service availability
 - **Limitation of Liability**: We are not liable for any damages arising from the use of the SDK
 
@@ -104,6 +102,9 @@ For questions about these Terms, please contact:
 
 **Change Log**
 
+- **v1.1.0 (2026-04-13)**: Terminology and policy clarification
+  - Unified terminology from "collected" to "transmitted"
+  - Revised Section 3.3 to align with MIT License (removed reverse engineering prohibition)
 - **v1.0.0 (2026-03-27)**: Initial release
 
 ---
