@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "StudioPeipeiko.VRClarity.Runtime",
+        "Unity.TextMeshPro",
         "UdonSharp.Runtime",
         "UdonSharp.Editor",
         "VRC.Core",

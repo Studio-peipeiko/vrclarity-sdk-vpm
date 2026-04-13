@@ -60,6 +60,10 @@ All transmitted data is anonymous. No personal information such as displayName o
 
 Right-click in the Hierarchy and select **VRClarity > Create Tracker**.
 
+A **VRClarity Notice Panel** is automatically placed alongside the Tracker to inform players about anonymous data collection.
+
+> **About the Notice Panel:** This UI panel notifies players that VRClarity SDK is collecting anonymous statistics. Place it somewhere visible in your world. You can also bulk-change the font via the `VRClarityNoticePanel` component Inspector. To add a Notice Panel independently, right-click in the Hierarchy and select **VRClarity > Create Notice Panel**.
+
 ### 3-2. Configure the Inspector
 
 Enter the following in the VRClarityTracker component Inspector:

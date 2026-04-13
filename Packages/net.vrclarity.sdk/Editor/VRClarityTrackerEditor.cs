@@ -19,10 +19,19 @@ namespace StudioPeipeiko.VRClarity.Editor
                 Debug.LogError("[VRClarity] Tracker prefab not found at: " + PrefabPath);
                 return;
             }
-            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-            GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
-            Undo.RegisterCreatedObjectUndo(go, "Create VRClarity Tracker");
-            Selection.activeGameObject = go;
+
+            var parent = menuCommand.context as GameObject;
+
+            // Tracker
+            GameObject tracker = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            GameObjectUtility.SetParentAndAlign(tracker, parent);
+            Undo.RegisterCreatedObjectUndo(tracker, "Create VRClarity Tracker");
+
+            // Notice Panel
+            var panel = VRClarityNoticePanelCreator.CreatePanel(parent);
+            Undo.RegisterCreatedObjectUndo(panel, "Create VRClarity Notice Panel");
+
+            Selection.activeGameObject = tracker;
         }
         private SerializedProperty _keyId;
         private SerializedProperty _encryptionKey;

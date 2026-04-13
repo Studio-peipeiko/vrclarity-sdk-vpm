@@ -2,6 +2,7 @@
     "name": "StudioPeipeiko.VRClarity.Runtime",
     "rootNamespace": "",
     "references": [
+        "Unity.TextMeshPro",
         "UdonSharp.Runtime",
         "VRC.Udon",
         "VRC.Udon.Serialization.OdinSerializer",
