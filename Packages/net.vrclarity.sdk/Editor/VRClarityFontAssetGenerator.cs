@@ -16,14 +16,9 @@ namespace StudioPeipeiko.VRClarity.Editor
         // パネルで実際に使う文字のみ事前書き込みしてアトラスサイズを最小化
         // VRClarityNoticePanelCreator のテキスト内容と同期させること
         private const string PanelCharacterSet =
-            " /:.()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
-            "β" +                               // VRClarity(β)
-            "ワールドクリエイタツプラットフォムデ" + // カタカナ
-            "のこためなはをしています" +            // ひらがな
-            "分析導入匿名統計取得送信" +             // 漢字
-            "、。・（）";
+            " ():./CDIKNRSUVacdehilmnprstvyβ、。（）・ーいこさしすせたてなのはまめをれんイエクタツデリルワ分析導入匿名統計取得等送信";
 
-        [MenuItem("Tools/VRClarity/Regenerate Font Asset", false, 100)]
+        [MenuItem("Tools/VRClarity/(dev) Regenerate Font Asset", false, 100)]
         private static void RegenerateFontAsset()
         {
             AssetDatabase.DeleteAsset(FontAssetPath);

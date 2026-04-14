@@ -17,8 +17,8 @@ namespace StudioPeipeiko.VRClarity.Editor
         private const float WorldScale  = 0.001f;
 
         // Colors matched to VRClarity dashboard
-        private static readonly Color BackgroundColor = new Color(0.044f, 0.102f, 0.182f, 0.97f); // rgb(20, 33, 51)
-        private static readonly Color AccentColor     = new Color(0.000f, 0.788f, 0.655f, 1.00f); // #00C9A7
+        private static readonly Color BackgroundColor = new Color(0.047f, 0.082f, 0.141f, 0.97f); // #0C1524
+        private static readonly Color AccentColor     = new Color(0.357f, 0.608f, 0.949f, 1.00f); // #5B9BF2
         private static readonly Color BodyColor       = new Color(0.929f, 0.945f, 0.961f, 1.00f); // #EDF1F5
         private static readonly Color SubtleColor     = new Color(0.424f, 0.471f, 0.541f, 1.00f); // #6C788A
 
@@ -107,7 +107,7 @@ namespace StudioPeipeiko.VRClarity.Editor
             logoRt.anchorMax = new Vector2(0f, 1f);
             logoRt.pivot     = new Vector2(0f, 1f);
             logoRt.anchoredPosition = new Vector2(30f, -20f);
-            logoRt.sizeDelta = new Vector2(80f, 80f);
+            logoRt.sizeDelta = new Vector2(90f, 90f);
             var logoImg = logoRt.gameObject.AddComponent<RawImage>();
             var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(LogoPath);
             if (tex != null) logoImg.texture = tex;
@@ -159,9 +159,9 @@ namespace StudioPeipeiko.VRClarity.Editor
             rt.offsetMin = new Vector2(44f,   54f);
             rt.offsetMax = new Vector2(-44f, -144f);
             tmp.text =
-                "このワールドは <color=#00C9A7>VRClarity SDK</color> を導入しています\n\n" +
+                "このワールドは <color=#5B9BF2>VRClarity SDK</color> を導入しています\n\n" +
                 "匿名の統計データを取得しています\n" +
-                "（UserID・displayName は送信されません）";
+                "（UserID・displayName 等は送信されません）";
             tmp.fontSize    = 22f;
             tmp.color       = BodyColor;
             tmp.alignment   = TextAlignmentOptions.TopLeft;
