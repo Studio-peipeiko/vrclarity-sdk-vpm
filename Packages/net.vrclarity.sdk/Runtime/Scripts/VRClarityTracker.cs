@@ -105,11 +105,11 @@ namespace StudioPeipeiko.VRClarity.Runtime
             Debug.Log("[VRClarity] Tracker initialized. Waiting for PlayerData...");
         }
 
-        public override void OnPlayerDataUpdated(VRCPlayerApi player, PlayerData.Info[] infos)
+        public override void OnPlayerRestored(VRCPlayerApi player)
         {
             if (player == null || !player.isLocal) return;
-            if (_visitSent) return;
 
+            if (_visitSent) return;
             _visitSent = true;
 
             // --- Visit Count (read after PlayerData is loaded) ---
