@@ -38,9 +38,13 @@ namespace StudioPeipeiko.VRClarity.Editor
         private SerializedProperty _enableTracking;
         private SerializedProperty _stayUrls;
         private SerializedProperty _moveUrls;
-        private SerializedProperty _visitUrls;
+        private SerializedProperty _joinUrls;
         private SerializedProperty _platformUrls;
         private SerializedProperty _pcUrls;
+        private SerializedProperty _verifyUrl;
+
+        // Must match the totalUrls computation in VRClarityUrlBaker (9 + 6 + 100 + 5 + 81 + 1).
+        private const int TOTAL_URL_COUNT = 202;
 
         private bool _showUrlStatus = false;
         private GUIStyle _errorStyle;
@@ -52,9 +56,10 @@ namespace StudioPeipeiko.VRClarity.Editor
             _enableTracking = serializedObject.FindProperty("enableTracking");
             _stayUrls = serializedObject.FindProperty("_stayUrls");
             _moveUrls = serializedObject.FindProperty("_moveUrls");
-            _visitUrls = serializedObject.FindProperty("_visitUrls");
+            _joinUrls = serializedObject.FindProperty("_joinUrls");
             _platformUrls = serializedObject.FindProperty("_platformUrls");
             _pcUrls = serializedObject.FindProperty("_pcUrls");
+            _verifyUrl = serializedObject.FindProperty("_verifyUrl");
         }
 
         public override void OnInspectorGUI()
@@ -110,13 +115,17 @@ namespace StudioPeipeiko.VRClarity.Editor
                 EditorGUI.indentLevel++;
                 DrawUrlPoolStatus("Stay URLs", _stayUrls, 9);
                 DrawUrlPoolStatus("Move URLs", _moveUrls, 6);
-                DrawUrlPoolStatus("Visit URLs", _visitUrls, 20);
+                DrawUrlPoolStatus("Join URLs (platform x visit)", _joinUrls, 100);
                 DrawUrlPoolStatus("Platform URLs", _platformUrls, 5);
                 DrawUrlPoolStatus("PC URLs", _pcUrls, 81);
+                int verifyCount = VerifyUrlCount(_verifyUrl);
+                EditorGUILayout.LabelField("Verify URL (config check)",
+                    verifyCount == 1 ? "1 / 1" : "0 / 1 (needs bake)");
 
                 int total = SafeArraySize(_stayUrls) + SafeArraySize(_moveUrls) +
-                            SafeArraySize(_visitUrls) + SafeArraySize(_platformUrls) + SafeArraySize(_pcUrls);
-                EditorGUILayout.LabelField($"Total: {total} / 121 URLs baked");
+                            SafeArraySize(_joinUrls) + SafeArraySize(_platformUrls) + SafeArraySize(_pcUrls) +
+                            verifyCount;
+                EditorGUILayout.LabelField($"Total: {total} / {TOTAL_URL_COUNT} URLs baked");
                 EditorGUI.indentLevel--;
             }
 
@@ -160,6 +169,13 @@ namespace StudioPeipeiko.VRClarity.Editor
         private int SafeArraySize(SerializedProperty prop)
         {
             return prop != null && prop.isArray ? prop.arraySize : 0;
+        }
+
+        // VRCUrl is a single serialized struct, not an array: count it as baked when its "url" is non-empty.
+        private int VerifyUrlCount(SerializedProperty prop)
+        {
+            var urlField = prop?.FindPropertyRelative("url");
+            return urlField != null && !string.IsNullOrEmpty(urlField.stringValue) ? 1 : 0;
         }
 
     }
