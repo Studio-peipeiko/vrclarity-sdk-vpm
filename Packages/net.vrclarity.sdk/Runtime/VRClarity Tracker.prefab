@@ -59,7 +59,7 @@ MonoBehaviour:
   encryptionKey:
   _stayUrls: []
   _moveUrls: []
-  _visitUrls: []
+  _joinUrls: []
   _platformUrls: []
   _pcUrls: []
 --- !u!114 &8844605545797677639

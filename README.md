@@ -11,7 +11,7 @@ VRChatワールドの利用状況に関する匿名の集計値をVRClarityに�
 VRChatワールド用SDK。滞在時間・移動距離・訪問回数・プラットフォーム・インスタンス内プレイヤー数などの匿名の集計値をVRClarityに送信します。個人を特定する情報は取得・送信しません。
 
 - **パッケージ名**: `net.vrclarity.sdk`
-- **バージョン**: 0.6.0
+- **バージョン**: 0.7.0
 - **公式サイト**: https://vrclarity.net/
 - **ドキュメント**: [README (日本語)](./Packages/net.vrclarity.sdk/Documentation~/README_ja.md) | [README (English)](./Packages/net.vrclarity.sdk/Documentation~/README_en.md)
 

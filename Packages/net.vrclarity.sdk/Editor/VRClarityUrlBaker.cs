@@ -183,10 +183,13 @@ namespace StudioPeipeiko.VRClarity.Editor
             // Move URLs (6)
             BakeUrlArray(so, "_moveUrls", "move", MoveMilestones, keyId, worldId, keyBytes);
 
-            // Visit URLs (20 buckets)
-            BakeUrlArray(so, "_visitUrls", "visit", VisitBuckets, keyId, worldId, keyBytes);
+            // Join URLs (5 platforms x 20 visit buckets = 100) — one combined
+            // request sent after PlayerData is restored. The server fans it out
+            // into a platform and a visit data point.
+            BakeJoinUrls(so, keyId, worldId, keyBytes);
 
-            // Platform URLs (5)
+            // Platform URLs (5) — fallback when PlayerData never restores, so at
+            // least the platform is reported (visit is unknowable then).
             BakeUrlArray(so, "_platformUrls", "platform", PlatformTypes, keyId, worldId, keyBytes);
 
             // PC URLs (0..80)
@@ -197,7 +200,7 @@ namespace StudioPeipeiko.VRClarity.Editor
 
             so.ApplyModifiedProperties();
 
-            int totalUrls = StayMilestones.Length + MoveMilestones.Length + VisitBuckets.Length + PlatformTypes.Length + (MAX_PC + 1) + 1;
+            int totalUrls = StayMilestones.Length + MoveMilestones.Length + (PlatformTypes.Length * VisitBuckets.Length) + PlatformTypes.Length + (MAX_PC + 1) + 1;
             Debug.Log($"[VRClarity] Baked {totalUrls} URLs for world {worldId}.");
 
             return true;
@@ -206,7 +209,7 @@ namespace StudioPeipeiko.VRClarity.Editor
         public static void ClearUrlPools(VRClarityTracker tracker)
         {
             var so = new SerializedObject(tracker);
-            foreach (var prop in new[] { "_stayUrls", "_moveUrls", "_visitUrls", "_platformUrls", "_pcUrls" })
+            foreach (var prop in new[] { "_stayUrls", "_moveUrls", "_joinUrls", "_platformUrls", "_pcUrls" })
             {
                 so.FindProperty(prop).arraySize = 0;
             }
@@ -256,6 +259,40 @@ namespace StudioPeipeiko.VRClarity.Editor
                 else
                 {
                     Debug.LogError($"[VRClarity] Failed to find 'url' property on VRCUrl. URL baking may have failed for {propertyName}[{i}].");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bake the combined join URLs. Index = platformIndex * VisitBuckets.Length + visitBucketIndex,
+        /// where platformIndex 0..4 maps to PlatformTypes 1..5. Must match VRClarityTracker.JoinUrlIndex.
+        /// Payload: w={worldId}&e=join&p={platform}&vc={visitBucket}
+        /// </summary>
+        private static void BakeJoinUrls(
+            SerializedObject so, string keyId, string worldId, byte[] keyBytes)
+        {
+            var prop = so.FindProperty("_joinUrls");
+            prop.arraySize = PlatformTypes.Length * VisitBuckets.Length;
+
+            for (int p = 0; p < PlatformTypes.Length; p++)
+            {
+                for (int v = 0; v < VisitBuckets.Length; v++)
+                {
+                    int index = p * VisitBuckets.Length + v;
+                    string plaintext = $"w={worldId}&e=join&p={PlatformTypes[p]}&vc={VisitBuckets[v]}";
+                    string encrypted = VRClarityEncryption.EncryptPayload(plaintext, keyBytes);
+                    string url = $"{BASE_URL}?k={keyId}&d={encrypted}";
+
+                    var element = prop.GetArrayElementAtIndex(index);
+                    var urlField = element.FindPropertyRelative("url");
+                    if (urlField != null)
+                    {
+                        urlField.stringValue = url;
+                    }
+                    else
+                    {
+                        Debug.LogError($"[VRClarity] Failed to find 'url' property on VRCUrl. URL baking may have failed for _joinUrls[{index}].");
+                    }
                 }
             }
         }
